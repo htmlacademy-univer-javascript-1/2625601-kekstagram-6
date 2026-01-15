@@ -1,3 +1,7 @@
+const SCALE_STEP = 25;
+const MIN_SCALE = 25;
+const MAX_SCALE = 100;
+
 const scaleControlSmaller = document.querySelector('.scale__control--smaller');
 const scaleControlBigger = document.querySelector('.scale__control--bigger');
 const scaleControlValue = document.querySelector('.scale__control--value');
@@ -25,7 +29,7 @@ const updateScale = () => {
   scaleControlValue.value = `${currentScale}%`;
 };
 
-export const updateEffectPreviews = (imageUrl) => {
+const updateEffectPreviews = (imageUrl) => {
   const previews = document.querySelectorAll('.effects__preview');
   previews.forEach((preview) => {
     preview.style.backgroundImage = `url("${imageUrl}")`;
@@ -46,12 +50,12 @@ const updateFilter = (effect, value) => {
   effectLevelValue.value = effect === 'none' ? '' : String(value);
 };
 
-export const resetScale = () => {
+const resetScale = () => {
   currentScale = 100;
   updateScale();
 };
 
-export const resetSlider = () => {
+const resetSlider = () => {
   if (sliderInstance) {
     sliderInstance.destroy();
     sliderInstance = null;
@@ -80,11 +84,11 @@ export const resetSlider = () => {
   }
 };
 
-export const resetEffectSelection = () => {
+const resetEffectSelection = () => {
   document.querySelector('#effect-none').checked = true;
 };
 
-export const resetFiltersState = () => {
+const resetFiltersState = () => {
   currentScale = 100;
   currentEffect = 'none';
   resetScale();
@@ -92,17 +96,17 @@ export const resetFiltersState = () => {
   resetEffectSelection();
 };
 
-export const initFilters = () => {
+const initFilters = () => {
   scaleControlSmaller.addEventListener('click', () => {
-    if (currentScale > 25) {
-      currentScale -= 25;
+    if (currentScale > MIN_SCALE) {
+      currentScale -= SCALE_STEP;
       updateScale();
     }
   });
 
   scaleControlBigger.addEventListener('click', () => {
-    if (currentScale < 100) {
-      currentScale += 25;
+    if (currentScale < MAX_SCALE) {
+      currentScale += SCALE_STEP;
       updateScale();
     }
   });
@@ -115,4 +119,13 @@ export const initFilters = () => {
   });
 
   resetScale();
+};
+
+export const filtersModule = {
+  updateEffectPreviews,
+  resetScale,
+  resetSlider,
+  resetEffectSelection,
+  resetFiltersState,
+  initFilters,
 };

@@ -15,8 +15,8 @@ const renderMiniatures = (photos) => {
     return;
   }
 
-  const pictures = picturesContainer.querySelectorAll('.picture');
-  pictures.forEach((picture) => picture.remove());
+  const oldPictures = picturesContainer.querySelectorAll('.picture');
+  oldPictures.forEach((picture) => picture.remove());
 
   const fragment = document.createDocumentFragment();
 

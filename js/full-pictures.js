@@ -1,3 +1,7 @@
+import { isEscapeKey } from './util.js';
+
+const COMMENTS_PER_PAGE = 5;
+
 let bigPictureElement = null;
 let bigPictureImgElement = null;
 let socialCaptionElement = null;
@@ -9,10 +13,9 @@ let cancelButtonElement = null;
 
 let currentComments = [];
 let shownCommentsCount = 0;
-const COMMENTS_PER_PAGE = 5;
 
 function initBigPictureDOM() {
-  if (bigPictureElement) {return;}
+  if (bigPictureElement) { return; }
 
   bigPictureElement = document.querySelector('.big-picture');
   bigPictureImgElement = bigPictureElement.querySelector('.big-picture__img img');
@@ -100,7 +103,7 @@ function onCommentsLoaderClick() {
 }
 
 function onDocumentKeydown(evt) {
-  if (evt.key === 'Escape') {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeFullSizePhoto();
   }

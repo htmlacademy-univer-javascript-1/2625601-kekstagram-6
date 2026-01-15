@@ -1,3 +1,5 @@
+import { isEscapeKey } from './util.js';
+
 const showMessage = (templateId, buttonText = 'Закрыть') => {
   const template = document.querySelector(`#${templateId}`);
   if (!template) {
@@ -12,30 +14,29 @@ const showMessage = (templateId, buttonText = 'Закрыть') => {
     button.textContent = buttonText;
   }
 
-  const onEscKeydown = (evt) => {
-    if (evt.key === 'Escape') {
+  function removeMessage() {
+    message.remove();
+    document.removeEventListener('keydown', onEscKeydown);
+    document.removeEventListener('click', onOverlayClick);
+  }
+
+  function onEscKeydown(evt) {
+    if (isEscapeKey(evt)) {
       evt.preventDefault();
-      evt.stopPropagation();
       removeMessage();
     }
-  };
+  }
 
-  const onOverlayClick = (evt) => {
+  function onOverlayClick(evt) {
     if (evt.target === message) {
       removeMessage();
     }
-  };
-
-  function removeMessage() {
-    message.remove();
-    document.removeEventListener('keydown', onEscKeydown, true);
-    document.removeEventListener('click', onOverlayClick);
   }
 
   if (button) {
     button.addEventListener('click', removeMessage);
   }
-  document.addEventListener('keydown', onEscKeydown, true);
+  document.addEventListener('keydown', onEscKeydown);
   document.addEventListener('click', onOverlayClick);
 
   return removeMessage;

@@ -1,7 +1,7 @@
 import { isEscapeKey } from './util.js';
 import { uploadData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
-import { initFilters, resetFiltersState } from './filters.js';
+import { filtersModule } from './filters.js';
 
 let isFormInitialized = false;
 
@@ -65,7 +65,7 @@ function closeUploadForm() {
     preview.style.backgroundImage = '';
   });
 
-  resetFiltersState();
+  filtersModule.resetFiltersState();
   pristine.reset();
   uploadSubmitElement.disabled = false;
   uploadSubmitElement.textContent = 'Опубликовать';
@@ -73,6 +73,10 @@ function closeUploadForm() {
 
 function onDocumentKeydown(evt) {
   if (isEscapeKey(evt)) {
+    if (document.querySelector('.error')) {
+      return;
+    }
+
     evt.preventDefault();
     const isTextInputFocused = document.activeElement === hashtagsInputElement || document.activeElement === descriptionInputElement;
     if (!isTextInputFocused) {
@@ -99,7 +103,7 @@ const openUploadForm = () => {
     document.body.classList.add('modal-open');
     document.addEventListener('keydown', onDocumentKeydown);
 
-    resetFiltersState();
+    filtersModule.resetFiltersState();
   }
 };
 
@@ -126,11 +130,10 @@ const onFormSubmit = (evt) => {
   uploadData(
     () => {
       showSuccessMessage();
-      closeUploadForm(); // ← кнопка восстановится здесь
+      closeUploadForm();
     },
     () => {
       showErrorMessage();
-      // На случай ошибки сети — тоже восстанавливаем
       uploadSubmitElement.disabled = false;
       uploadSubmitElement.textContent = 'Опубликовать';
     },
@@ -157,7 +160,7 @@ const initForm = () => {
   pristine.addValidator(hashtagsInputElement, validateHashtags, 'Хэш-теги: до 5 шт., не повторяются, формат #тег (до 20 символов)');
   pristine.addValidator(descriptionInputElement, validateDescription, 'Комментарий не должен превышать 140 символов');
 
-  initFilters();
+  filtersModule.initFilters();
 
   uploadInputElement.addEventListener('change', onFileInputChange);
   uploadCancelElement.addEventListener('click', onCancelButtonClick);
